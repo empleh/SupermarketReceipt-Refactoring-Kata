@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
+using FluentAssertions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SupermarketReceipt;
-using Xunit;
 
 namespace Supermarket.Test
 {
+    [TestClass]
     public class SupermarketTest
     {
-   
-        [Fact]
+        [TestMethod]
         public void TenPercentDiscount()
         {
             // ARRANGE
@@ -28,14 +29,15 @@ namespace Supermarket.Test
             var receipt = teller.ChecksOutArticlesFrom(cart);
 
             // ASSERT
-            Assert.Equal(4.975, receipt.GetTotalPrice());
-            Assert.Equal(new List<Discount>(), receipt.GetDiscounts());
-            Assert.Single(receipt.GetItems());
+            receipt.GetTotalPrice().Should().Be(4.975);
+            receipt.GetDiscounts().Should().BeEmpty();
+            receipt.GetItems().Count.Should().Be(1);
+
             var receiptItem = receipt.GetItems()[0];
-            Assert.Equal(apples, receiptItem.Product);
-            Assert.Equal(1.99, receiptItem.Price);
-            Assert.Equal(2.5 * 1.99, receiptItem.TotalPrice);
-            Assert.Equal(2.5, receiptItem.Quantity);
+            receiptItem.Product.Should().Be(apples);
+            receiptItem.Price.Should().Be(1.99);
+            receiptItem.TotalPrice.Should().Be(2.5 * 1.99);
+            receiptItem.Quantity.Should().Be(2.5);
         }
     }
 }
